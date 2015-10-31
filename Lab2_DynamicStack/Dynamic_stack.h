@@ -31,6 +31,10 @@
 #define nullptr 0
 #endif
 
+//pop not working, strange value occurs at 1/4
+//is there a memory leak in my resizing function
+//I feel that my copy constructor is wrong. How to copy the pointers of the Type? how to call the copy constructor of the type
+
 
 //#include "Exception.h"
 
@@ -41,7 +45,7 @@ private:
 	int entry_count;		//size of stack
 	int initial_capacity;	//capacity of stack cannot be smaller than this
 	int array_capacity;		//maximum number of items stack can store
-	Type* array[10];			//use array to hold stack
+	Type* array;			//use array to hold stack
 
 public:
 	Dynamic_stack(int = 10);
@@ -66,7 +70,7 @@ Dynamic_stack<Type>::Dynamic_stack(int n) :
 entry_count(0),
 initial_capacity(n),
 array_capacity(n) {
-	//array = /*new Type[array_capacity];*/ array[array_capacity];
+	array = new Type[array_capacity];
 }
 
 template <typename Type>
@@ -75,6 +79,11 @@ entry_count(stack.entry_count),
 initial_capacity(stack.initial_capacity),
 array_capacity(stack.array_capacity),
 array(new Type[array_capacity]) {
+	
+	for (int i = 0 i < entry_count; i++)
+	{
+		array[i] = stack.array[i];
+	}
 	// The above initializations copy the values of the appropriate
 	// member variables and allocate memory for the data structure;
 	// however, you must still copy the stored objects.
@@ -146,13 +155,14 @@ void Dynamic_stack<Type>::push(Type const &obj) {
 		for (int i = 0; i < array_capacity; i++)
 		{
 			new_array[i] = array[i];
-			delete[] array;
 			array = new_array;
 		}
+		array_capacity = array_capacity * 2;
 	}
 
-	entry_count++;
 	array[entry_count] = obj;
+	entry_count++;
+
 
 }
 
@@ -171,13 +181,12 @@ Type Dynamic_stack<Type>::pop() {
 	if (entry_count <= array_capacity / 4)
 	{
 		//if the new array would have less than initial_capacity elements, make it have initial_capacity
-		if (array_capacity / 4 < 10) 
+		if (array_capacity / 2 < 10) 
 		{ 
 			Type* new_array = new Type[initial_capacity];
 			for (int i = 0; i < entry_count; i++)
 			{
 				new_array[i] = array[i];
-				delete[] array;
 				array = new_array;
 			}
 			array_capacity = initial_capacity; 
@@ -186,11 +195,10 @@ Type Dynamic_stack<Type>::pop() {
 		//if the new array would have more than initial_capacity, resize it to a quarter its size
 		else
 		{
-			Type* new_array = new Type[array_capacity/4];
+			Type* new_array = new Type[array_capacity/2];
 			for (int i = 0; i < entry_count; i++)
 			{
 				new_array[i] = array[i];
-				delete[] array;
 				array = new_array;
 			}
 			array_capacity = array_capacity / 4;
