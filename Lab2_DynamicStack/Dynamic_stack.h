@@ -23,6 +23,7 @@
 *    -
 *****************************************/
 #include <stdexcpt.h>
+#include <iostream>
 
 #ifndef DYNAMIC_STACK_H
 #define DYNAMIC_STACK_H
@@ -157,12 +158,18 @@ void Dynamic_stack<Type>::push(Type const &obj) {
 			new_array[i] = array[i];
 			array = new_array;
 		}
+
 		array_capacity = array_capacity * 2;
 	}
 
 	array[entry_count] = obj;
-	entry_count++;
 
+
+	//something is funny with the push function
+	//cout << array[entry_count];
+
+	entry_count++;
+	auto j = array[5];
 
 }
 
@@ -171,39 +178,45 @@ void Dynamic_stack<Type>::push(Type const &obj) {
 	The array's size cannot be less than initial_capacity */
 template <typename Type>
 Type Dynamic_stack<Type>::pop() {
+
 	if (entry_count == 0) throw std::exception("UNDERFLOW. ARRAY ALREADY HAS 0 ELEMENTS. MUHAHAHAHAHA!");
 
 	Type top_element = array[entry_count - 1];
-	array[entry_count - 1] = NULL;								//QUESITONABLE????????????????????????????????????????????????????????
+//	cout << top_element;
+
+
+	auto a = array[5];
+
+	//array[entry_count - 1] = NULL;								//QUESITONABLE????????????????????????????????????????????????????????
 	entry_count--;
 
-	//resize array if necessary
-	if (entry_count <= array_capacity / 4)
-	{
-		//if the new array would have less than initial_capacity elements, make it have initial_capacity
-		if (array_capacity / 2 < 10) 
-		{ 
-			Type* new_array = new Type[initial_capacity];
-			for (int i = 0; i < entry_count; i++)
-			{
-				new_array[i] = array[i];
-				array = new_array;
-			}
-			array_capacity = initial_capacity; 
-		}
+	////resize array if necessary
+	//if (entry_count <= array_capacity / 4)
+	//{
+	//	//if the new array would have less than initial_capacity elements, make it have initial_capacity
+	//	if (array_capacity / 2 < 10) 
+	//	{ 
+	//		Type* new_array = new Type[initial_capacity];
+	//		for (int i = 0; i < entry_count; i++)
+	//		{
+	//			new_array[i] = array[i];
+	//			array = new_array;
+	//		}
+	//		array_capacity = initial_capacity; 
+	//	}
 
-		//if the new array would have more than initial_capacity, resize it to a quarter its size
-		else
-		{
-			Type* new_array = new Type[array_capacity/2];
-			for (int i = 0; i < entry_count; i++)
-			{
-				new_array[i] = array[i];
-				array = new_array;
-			}
-			array_capacity = array_capacity / 4;
-		}
-	}
+	//	//if the new array would have more than initial_capacity, resize it to a quarter its size
+	//	else
+	//	{
+	//		Type* new_array = new Type[array_capacity/2];
+	//		for (int i = 0; i < entry_count; i++)
+	//		{
+	//			new_array[i] = array[i];
+	//			array = new_array;
+	//		}
+	//		array_capacity = array_capacity / 4;
+	//	}
+	//}
 
 	return top_element;
 }
