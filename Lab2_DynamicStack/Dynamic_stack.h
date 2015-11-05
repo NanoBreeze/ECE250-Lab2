@@ -32,12 +32,12 @@
 #define nullptr 0
 #endif
 
-//pop not working, strange value occurs at 1/4
+//exceptions must be of given headers
 //is there a memory leak in my resizing function
 //I feel that my copy constructor is wrong. How to copy the pointers of the Type? how to call the copy constructor of the type
 
 
-//#include "Exception.h"
+#include "Exception.h"
 
 
 template <typename Type>
@@ -47,6 +47,7 @@ private:
 	int initial_capacity;	//capacity of stack cannot be smaller than this
 	int array_capacity;		//maximum number of items stack can store
 	Type* array;			//use array to hold stack
+	void resize_array(int size);
 
 public:
 	Dynamic_stack(int = 10);
@@ -81,15 +82,10 @@ initial_capacity(stack.initial_capacity),
 array_capacity(stack.array_capacity),
 array(new Type[array_capacity]) {
 	
-	for (int i = 0 i < entry_count; i++)
+	for (int i = 0; i < entry_count; i++)
 	{
 		array[i] = stack.array[i];
 	}
-	// The above initializations copy the values of the appropriate
-	// member variables and allocate memory for the data structure;
-	// however, you must still copy the stored objects.
-
-	// Enter your implementation here.
 }
 
 template <typename Type>
@@ -103,8 +99,8 @@ Dynamic_stack<Type>::~Dynamic_stack() {
 /* Returns the top element of the stack. Can throw underflow error. */
 template <typename  Type>
 Type Dynamic_stack<Type>::top() const {
-	if (entry_count == 0) throw std::exception("THERE ARE NO ELEMENTS IN THE STACK. NO ELEMENTS TO SHOW. MUHAHAHAHA!!!");
-	return array[entry_count - 1];;
+	if (entry_count == 0) throw underflow();
+	return array[entry_count - 1];
 }
 
 /* Returns the number of elements in the stack */
@@ -116,12 +112,7 @@ int Dynamic_stack<Type>::size() const {
 /* Returns true if the stack is empty, false otherwise */
 template <typename Type>
 bool Dynamic_stack<Type>::empty() const {
-	//(entry_count == 0) ? return true; : return false;
-	if (entry_count == 0)
-	{
-		return true;
-	}
-	else { return false; }
+	return (entry_count == 0) ? true : false;
 }
 
 /* Returns the current size of the stack */
@@ -152,25 +143,12 @@ void Dynamic_stack<Type>::push(Type const &obj) {
 	//if array is already full, make a new one double in size, pointer points to it, 
 	if (entry_count == array_capacity)
 	{
-		Type* new_array = new Type[2 * array_capacity];
-		for (int i = 0; i < array_capacity; i++)
-		{
-			new_array[i] = array[i];
-			array = new_array;
-		}
-
+		resize_array(2 * array_capacity);
 		array_capacity = array_capacity * 2;
 	}
 
 	array[entry_count] = obj;
-
-
-	//something is funny with the push function
-	//cout << array[entry_count];
-
 	entry_count++;
-	auto j = array[5];
-
 }
 
 /*  Removes the top element on the stack. Throws underflow exception if stack if empty. 
@@ -179,57 +157,52 @@ void Dynamic_stack<Type>::push(Type const &obj) {
 template <typename Type>
 Type Dynamic_stack<Type>::pop() {
 
-	if (entry_count == 0) throw std::exception("UNDERFLOW. ARRAY ALREADY HAS 0 ELEMENTS. MUHAHAHAHAHA!");
+	if (entry_count == 0) throw underflow();
 
 	Type top_element = array[entry_count - 1];
-//	cout << top_element;
 
-
-	auto a = array[5];
-
-	//array[entry_count - 1] = NULL;								//QUESITONABLE????????????????????????????????????????????????????????
+	array[entry_count - 1] = NULL;								
 	entry_count--;
 
-	////resize array if necessary
-	//if (entry_count <= array_capacity / 4)
-	//{
-	//	//if the new array would have less than initial_capacity elements, make it have initial_capacity
-	//	if (array_capacity / 2 < 10) 
-	//	{ 
-	//		Type* new_array = new Type[initial_capacity];
-	//		for (int i = 0; i < entry_count; i++)
-	//		{
-	//			new_array[i] = array[i];
-	//			array = new_array;
-	//		}
-	//		array_capacity = initial_capacity; 
-	//	}
+	//resize array if necessary
+	if (entry_count <= array_capacity / 4)
+	{
+		//if the new array would have less than initial_capacity elements, make it have initial_capacity
+		if (array_capacity / 2 < 10) 
+		{ 
+			resize_array(initial_capacity);
+			array_capacity = initial_capacity; 
+		}
 
-	//	//if the new array would have more than initial_capacity, resize it to a quarter its size
-	//	else
-	//	{
-	//		Type* new_array = new Type[array_capacity/2];
-	//		for (int i = 0; i < entry_count; i++)
-	//		{
-	//			new_array[i] = array[i];
-	//			array = new_array;
-	//		}
-	//		array_capacity = array_capacity / 4;
-	//	}
-	//}
+		//if the new array would have more than initial_capacity, resize it to a quarter its size
+		else
+		{
+			resize_array(array_capacity / 2);
+			array_capacity = array_capacity / 4;
+		}
+	}
 
 	return top_element;
 }
 
-//resize array refactor
-
-
+//resets array
 template <typename Type>
 void Dynamic_stack<Type>::clear() {
 	delete[] array;
 	array = new Type[initial_capacity];
 	array_capacity = initial_capacity;
 	entry_count = 0;
+}
+
+// helper function to resize array
+template<typename Type> void Dynamic_stack<Type>::resize_array(int size) {
+	Type* new_array = new Type[size];
+	for (int i = 0; i < entry_count; i++)
+	{
+		new_array[i] = array[i];
+	}
+	delete[] array;
+	array = new_array;
 }
 
 #endif

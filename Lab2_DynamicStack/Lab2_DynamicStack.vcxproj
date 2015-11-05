@@ -69,10 +69,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Dynamic_stack_driver.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dynamic_stack.h" />
+    <ClInclude Include="Dynamic_stack_tester.h" />
+    <ClInclude Include="ece250.h" />
+    <ClInclude Include="Exception.h" />
+    <ClInclude Include="Tester.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
