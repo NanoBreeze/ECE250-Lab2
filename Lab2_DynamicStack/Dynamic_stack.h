@@ -22,7 +22,6 @@
 * who helped me with this project (describe their help; e.g., debugging):
 *    -
 *****************************************/
-#include <stdexcpt.h>
 #include <iostream>
 
 #ifndef DYNAMIC_STACK_H
@@ -47,7 +46,7 @@ private:
 	int initial_capacity;	//capacity of stack cannot be smaller than this
 	int array_capacity;		//maximum number of items stack can store
 	Type* array;			//use array to hold stack
-	void resize_array(int size);
+	void resize_array(int size);	//helper function to resize array
 
 public:
 	Dynamic_stack(int = 10);
@@ -64,6 +63,9 @@ public:
 	void push(Type const &);//push object to the top of the stack
 	Type pop();				//pops the top element off the stack
 	void clear();			//remove all elements from stack. Array is set to initial_capacity
+
+	void print();
+
 };
 
 
@@ -161,14 +163,14 @@ Type Dynamic_stack<Type>::pop() {
 
 	Type top_element = array[entry_count - 1];
 
-	array[entry_count - 1] = NULL;								
+	array[entry_count - 1] = nullptr;								
 	entry_count--;
 
 	//resize array if necessary
 	if (entry_count <= array_capacity / 4)
 	{
 		//if the new array would have less than initial_capacity elements, make it have initial_capacity
-		if (array_capacity / 2 < 10) 
+		if (array_capacity / 2 < initial_capacity) 
 		{ 
 			resize_array(initial_capacity);
 			array_capacity = initial_capacity; 
@@ -178,7 +180,7 @@ Type Dynamic_stack<Type>::pop() {
 		else
 		{
 			resize_array(array_capacity / 2);
-			array_capacity = array_capacity / 4;
+			array_capacity = array_capacity / 2;
 		}
 	}
 
@@ -194,15 +196,16 @@ void Dynamic_stack<Type>::clear() {
 	entry_count = 0;
 }
 
+template<typename Type> void Dynamic_stack<Type>::print() { }
+
 // helper function to resize array
 template<typename Type> void Dynamic_stack<Type>::resize_array(int size) {
-	Type* new_array = new Type[size];
+	Type* temp = new Type[size];
 	for (int i = 0; i < entry_count; i++)
 	{
-		new_array[i] = array[i];
+		temp[i] = array[i];
 	}
 	delete[] array;
-	array = new_array;
+	array = temp;
 }
-
 #endif
