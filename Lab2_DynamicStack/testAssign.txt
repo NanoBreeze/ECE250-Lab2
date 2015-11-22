@@ -1,0 +1,44 @@
+new
+push 101
+push 102
+push 103
+push 104
+push 105
+assign
+	push 106
+	push 107
+	push 108
+	push 109
+	push 110
+        delete
+exit
+top 105
+pop 105
+top 104
+pop 104
+clear
+push 101
+push 102
+push 103
+push 104
+push 105
+push 106
+push 107
+push 108
+push 109
+push 110
+push 111
+assign
+	push 106
+	push 107
+	push 108
+	push 109
+	push 110
+        delete
+exit
+top 111
+pop 111
+top 110
+pop 110
+delete
+summary

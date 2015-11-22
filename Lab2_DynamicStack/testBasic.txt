@@ -1,0 +1,9 @@
+new: 3
+push 101
+push 102
+push 103
+pop 103
+pop 102
+pop 101
+delete
+summary
