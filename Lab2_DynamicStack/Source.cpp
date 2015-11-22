@@ -7,12 +7,14 @@ using namespace std;
 int main()
 {
 
-	Dynamic_stack<int> dynamic_stack;
-
+	Dynamic_stack<int> dynamic_stack(100);
+	auto n = dynamic_stack.capacity();
 	dynamic_stack.push(45);
 	dynamic_stack.push(45);
+	auto j = dynamic_stack.pop();
+	auto sdf = dynamic_stack.capacity();
+	
 	dynamic_stack.push(45);
-	 dynamic_stack.push(45);
 	 dynamic_stack.push(46);
 	 dynamic_stack.push(47);
 	dynamic_stack.push(48);
